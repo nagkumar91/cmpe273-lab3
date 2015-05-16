@@ -13,7 +13,7 @@ import edu.sjsu.cmpe.cache.api.resources.CacheResource;
 import edu.sjsu.cmpe.cache.config.CacheServiceConfiguration;
 import edu.sjsu.cmpe.cache.domain.Entry;
 import edu.sjsu.cmpe.cache.repository.CacheInterface;
-import edu.sjsu.cmpe.cache.repository.InMemoryCache;
+import edu.sjsu.cmpe.cache.repository.ChronicleMapCache;
 
 public class CacheService extends Service<CacheServiceConfiguration> {
 
@@ -32,8 +32,7 @@ public class CacheService extends Service<CacheServiceConfiguration> {
     public void run(CacheServiceConfiguration configuration,
             Environment environment) throws Exception {
         /** Cache APIs */
-        ConcurrentHashMap<Long, Entry> map = new ConcurrentHashMap<Long, Entry>();
-        CacheInterface cache = new InMemoryCache(map);
+        CacheInterface cache = new ChronicleMapCache(configuration.getHttpConfiguration().getPort());
         environment.addResource(new CacheResource(cache));
         log.info("Loaded resources");
 
